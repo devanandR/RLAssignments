@@ -1,0 +1,125 @@
+Assignment 3, CS747, Autumn 2015
+
+
+In this assignment, you must implement an algorithm for estimating the
+value function of a policy in an MDP, given a sample trajectory of the
+form state, action, reward, state, action, reward, ....
+
+
+DATA FORMAT
+
+The input to your ``evaluator'' will be a text file that provides
+information in the following format.
+
+Number of states
+Number of actions
+Discount factor
+state1	 action1	reward1
+state2	 action2	reward2
+state3	 action3	reward3
+.
+.
+.
+stateN	 actionN	rewardN
+stateN+1
+
+The number of states S and the number of actions A will be integers
+greater than 0. Assume that the states are numbered 0, 1, ..., S - 1,
+and the actions numbered 0, 1, ..., A - 1. The discount factor will
+lie between 0 (included) and 1 (excluded). The trajectory over time
+will be long enough, and the dynamics of the underlying MDP such, that
+there is at least one outgoing transition from each state in the
+MDP. Note that the MDP is NOT episodic: that is, stateN+1 is not a
+terminal state (and could occur within the trajectory multiple
+times). The trajectory is merely a finite sequence generated according
+to the underlying transition and reward functions, and terminated at
+some arbitrary time step.
+
+You can assume that S and A will not exceed 50, and N, the total
+number of transitions in the trajectory, will not exceed 500,000.
+
+In the data directory enclosed, you will find two sample data files
+(d1.txt and d2.txt).
+
+
+OUTPUT
+
+Given a data file, your evaluator must estimate the value function V
+under the policy being followed. The output, written to standard
+output, must be in the following format (Est-V is your estimate of V).
+
+Est-V(0)
+Est-V(1)
+.
+.
+.
+Est-V(S - 1)
+
+In the data directory enclosed, you will find output files
+corresponding to the two data files, which have solutions in the
+format above. The values mentioned in these output files are indeed
+the true values (under the same policy) from the MDP being
+sampled. Naturally, as you will have to estimate values based on
+samples alone, your estimates cannot be expected to match the true
+values perfectly.
+
+Since your output will be checked automatically, make sure you have
+nothing printed to stdout other than the S lines as above in
+sequence. If the testing code is unable to parse your output, you will
+not receive any marks.
+
+
+SUBMISSION
+
+You must submit a directory titled ``evaluator'', which contains all
+your source and executable files. The directory must contain a script
+titled evaluator.sh, which must take in exactly one command line
+argument corresponding to a data file. For testing your code, the
+following command will be used from your evaluator directory.
+
+./evaluator.sh dataFileName
+
+dataFileName will include the full path. Before you submit, make sure
+you can successfully run evaluator.sh on the departmental (nsl)
+machines.
+
+Include a file called notes.txt in your evaluator directory, that (1)
+describes the algorithm your evaluator implements, and (2) provides
+references to any libraries and code snippets you have utilised. It is
+okay to use libraries for data structures and for operations such as
+sorting. However, the logic used for policy evaluation must entirely
+be code that you have written.
+
+In summary: you must submit your evaluator directory (compressed as
+evaluator.tar.gz) through Moodle. The directory must contain
+evaluator.sh, along with all the sources and executables, as well as a
+notes.txt file.
+
+
+EVALUATION
+
+Your evaluator will be tested on trajectories generated from different
+MDPs and policies. Your task is to ensure that it prints out a good
+estimate of the true value function in each case. Performance will be
+quantified based on the unweighted L2 distance between your estimate
+Est-V and the true value function V: that is,
+
+  Error = sqrt(sum_{s \in S} (V(s) - Est-V(s))^{2}).
+
+The instructor may look at your source code and notes to corroborate
+the results obtained by your evaluator, and may also call you to a
+face-to-face session to explain your code.
+
+
+DEADLINE AND RULES
+
+Your submission is due by 11.59 p.m., October 22, 2015.  You will get
+a score of zero if your code is not received by the deadline.
+
+You must work alone on this assignment. Do not share any code (whether
+yours or code you have found on the Internet) with your classmates.
+
+You will not be allowed to alter your code in any way after the
+submission deadline. Before submission, make sure that it runs as
+expected on the nsl machines.
+
