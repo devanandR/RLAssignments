@@ -1,0 +1,22 @@
+ 1. Algorithm: 
+ The algortihm my planner implements is a simple Policy iteration method. The Algorithm requires the following steps:
+       	
+      1. Input :Copy the input MdpFile to InputMdp.txt ( command used in planner.sh file)
+         Retreive size of state set, size of action set, gamma, Matrix contains both Rewards and Transition probablilities.
+         Output: The result obtained from this algorithm is stored in OutpuPi.txt.
+                
+       Initialize: Initialize Value V[s] =0 and Policy Pi[s] =0 for all s \in S
+       
+       2. Call function Policy Evaluation(V, Pi)
+       		Use simple policy evaluation (uses an iterative method) to update V.
+       		That is, for all s \in S, given Pi
+       			Find new V'[s] =  \sum_{s'}Trans(s,Pi[s],s')*[Reward(s,Pi[s],s')+gamma* V[s']]
+       			 untill abs(V[s] -V[s']) approaches to zero, Do updation.
+       3.	Policy improvement: with the updated value of V (from step 1) and given Pi, evaluate
+       		a new policy Pi'. That is for all s \in S,
+       			Pi'[s] =argmax_{a} \sum_{s'}Trans(s,a,s')*[Reward(s,a,s')+gamma* V[s']]		
+       		if for all s \in S
+       		   Pi'[s] =Pi[s], then stop "This is the optimal result"
+       		else return to function Policy evaluation(V, Pi')   	
+
+Reference: Sutton, Richard S., and Andrew G. Barto. Reinforcement learning: An introduction. Vol. 1. No. 1. Cambridge: MIT press, 1998.
