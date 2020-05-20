@@ -1,0 +1,33 @@
+Assignment 3 (CS 747)
+The algorithm my evaluator implements is a TD(lambda) with batch method. The steps are as follows:
+
+Input :Copy the input DataFile to InputTraject.txt (the command used in planner.sh file)
+         Retreive size of state set,the size of action set, discount factor DiscFact and state S_{N+1}.
+         
+Initialize: Initialize Value Value[s] =0 and Es[s]=0 for all s in state set.
+	    initialize er0 =.000001, Set Error =some positive value greater than er0
+	    Lambda =lmbda (a learned value), alpha = 0.005 is a learning parameter(a learned value)
+while(Error>er0)
+	TempValue = Value # temorarily keep the value of Value in TempValue
+	i = position of the initial state 
+	While trajctory is remain to read ie. i has passed S_{N+1}:
+		i is the pointer to current position of the trajectory
+		# record current state s, corresponding action a taken to s, reward received 
+		#by taking the action a and hence the next state s_next
+		TdError = r + DiscFact*Value[s_next] -Value[s] # evaluate the td-error
+		Es[s] = Es[s] +1 # increase the eligibility trace correspond to s
+		For all s in state set:
+			Value[s] = Value[s] + alpha*TdError*Es[s] # update the value function
+			E[s] = DiscFact^{Lambda}*E[s] # decay of Eligibility Traces by DiscFact^{Lambda}
+		pointer i moves to state s_next
+	Error = max(absolute_difference (TempValue,Value)) # maximum valued component of the absolute difference between TempValue and Value
+Print Value # std out the Estimate Value function. 
+
+Note: 
+Lambda value is learned by running the algorithm multiple times with different value of lambda till the root mean square error (between given actual Value function and the resulting estimated value function) is not minimized (reach to some small fixed value).
+ It is noted that TD(1) i.e. Monte Carlo method works well.
+Performance (time complexity) of the algorithm is inversly proporsitional to learning parameter alpha. Also alpha is directly proportional to the acuracy i.e. lower the alpha higher the accuracy.  
+Value of alpha = .00001 is kept and Lambda is fixed to 1. One could speed up the algorithm by increasing alpha. Lambda = .78983938613 also gives similar performance.
+
+
+Reference: Sutton, Richard S., and Andrew G. Barto. Reinforcement learning: An introduction. Vol. 1. No. 1. Cambridge: MIT press, 1998.
