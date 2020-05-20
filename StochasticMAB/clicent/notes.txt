@@ -1,0 +1,50 @@
+1.Description of the Algorithm
+		................................
+	My agent implements a variant of Thompson sampling. Thompson sampling is bandit algorithm where each arm is drawn according to its 		probability of being optimal. A novel approach uses the following steps (for Bernaulli bandit):
+
+........................................................................................................................................
+    	 For each arm k = 1, . . ., K, initialize alpha[k] = 1, beta[k] = 1. ## alpha and beta keep record of the success and failure ##
+    	   	Initialize epsilon with a positive number ## selection of epsilon impact the performance of the Agent##
+    	  	Initialize a variable a[1] = epsilon # 
+    	 For each trial t = 1 ..., Horizon:
+    		For each arm k = 1 ...,NumberofArms:
+    			Draw X_{k} according to Beta(alpha[k]/a[t],beta[k]/a[t]) 
+    		end
+    		send Arm_k* s.t., 
+    				k* =argmax_{k}X_{k}
+    		receive a reward R_{t} 
+    		if R_{t} =1 then alpha[k*] =alpha[k*]+1 
+    		else beta[k*] =beta[k*] +1          
+    		update, a[t+1] =epsilon*log(t+1)/(t+1) 
+    	   end	
+.......................................................................................................................................
+	Algorithm instead Beta random sample, generates gamma random samples and evaluate the beta. The reason is that in c++ one can 		easily get the gamma random sample. Note that, if X is a sample from gamma(alpha,1) and Y is a sample from gamma(beta,1), 
+	then X/(X+Y) will be random sample equivalent to sample generated from beta(alpha,beta).    
+........................................................................................................................................	
+	Analysis: 
+		The mean reward of each arm is useful (and standard) to model using a Beta distribution since it is the conjugate 			distribution of the bernoulli distribution. The above modification in the parameters of the posteriors not only disturb 			the posterior predictive, but also balances the exploration and exploitation. 
+		
+		That means, the mean is unchanged, Beta(alpha[k]/a[t], beta[k]/a[t]) is equal to Beta(alpha[k], beta[k]) and independent to 			a[t]. But there is a change in variance. Variance is now directly proportional to a[t]^2. Lower values of a[t] (generally 			less than 1) decrease the variance and hence the lesser amount of exploration. Whereas higher variance, by increasing the 			value of a[t](generally more than), could lead to over-exploration. There are some papers which show the improvement using 			experimental analysis. But they have fixed the parameter a[t] = a and learn this value (off line) with multiple experiments 			with various instances and different values of parameters (such as bandit size, horizon size). 
+		
+		At the elementry level, I have tried to vary the parameter a[t] online. I applied a simple method to vary the 			exploration-		exploitation parameter using a bandit strategy called "decreasing SoftMax" (analyzed by 		Cesa	-Bianchi and Fisher(1998)) a variant of Soft-Max strategy. According to this, temperature decreases 			with the factor of log(t)/t, where t is the number of trial to pull the arm. In my algorithm discussed above, a[t] is also 			decreases with the factor of log(t)/t. There might be another method to learn this method (I am exploring the related papers).
+.........................................................................................................................................		      
+	Experiments: Comparison among the Thompson sampling, Thompson sampling with a constant parameter (i.e. a[t] =a) and Thompson 		sampling with a  varying parameter a[t] is done with multiple instances and various input parameters. The result shows that 		modification in the Thomson sampling works better for large input parameters.
+	
+..................................................................................................................................
+2. References:
+	http://stackoverflow.com/questions/10358064/random-numbers-from-beta-distribution-c
+	
+	http://www.cplusplus.com/reference/random/gamma_distribution/
+	
+	http://www.cplusplus.com/reference/random/gamma_distribution/operator%28%29/
+	
+	Vermorel, Joannes, and Mehryar Mohri. "Multi-armed bandit algorithms and empirical evaluation." Machine Learning: ECML 2005. Springer Berlin Heidelberg, 2005. 437-448.
+	
+	Chapelle, Olivier, and Lihong Li. "An empirical evaluation of thompson sampling." Advances in neural information processing systems. 2011.
+	
+	Agrawal, Shipra, and Navin Goyal. "Analysis of Thompson sampling for the multi-armed bandit problem." arXiv preprint arXiv:1111.1797 (2011).
+	
+	
+	
+    	   
+   
